@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "nshconfig-extra"
+version = "0.2.0"
+description = ""
+authors = ["Nima Shoghi <nimashoghi@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.urls]
+homepage = "https://github.com/nimashoghi/nshconfig-extra"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+nshconfig = "*"
+huggingface-hub = { version = "*", optional = true }
+
+[tool.poetry.group.dev.dependencies]
+pyright = "*"
+ruff = "*"
+ipykernel = "*"
+ipywidgets = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pyright]
+typeCheckingMode = "standard"
+deprecateTypingAliases = true
+strictListInference = true
+strictDictionaryInference = true
+strictSetInference = true
+reportPrivateImportUsage = false
+
+[tool.ruff.lint]
+ignore = ["F722", "F821", "E731", "E741"]
+
+[tool.poetry.extras]
+extra = ["huggingface-hub"]
