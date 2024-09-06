@@ -1,1 +1,1 @@
-from .hf_path import HFPath as HFPath
+from .cached_path import CachedPath as CachedPath

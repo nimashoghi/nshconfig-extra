@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nshconfig-extra"
-version = "0.2.0"
+version = "0.3.0"
 description = ""
 authors = ["Nima Shoghi <nimashoghi@gmail.com>"]
 readme = "README.md"
@@ -11,7 +11,7 @@ homepage = "https://github.com/nimashoghi/nshconfig-extra"
 [tool.poetry.dependencies]
 python = "^3.10"
 nshconfig = "*"
-huggingface-hub = { version = "*", optional = true }
+cached-path = { version = "*", optional = true }
 
 [tool.poetry.group.dev.dependencies]
 pyright = "*"
@@ -35,4 +35,4 @@ reportPrivateImportUsage = false
 ignore = ["F722", "F821", "E731", "E741"]
 
 [tool.poetry.extras]
-extra = ["huggingface-hub"]
+extra = ["cached-path"]
