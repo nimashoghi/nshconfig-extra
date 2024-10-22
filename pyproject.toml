@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nshconfig-extra"
-version = "0.3.0"
+version = "0.4.0"
 description = ""
 authors = ["Nima Shoghi <nimashoghi@gmail.com>"]
 readme = "README.md"
@@ -11,7 +11,7 @@ homepage = "https://github.com/nimashoghi/nshconfig-extra"
 [tool.poetry.dependencies]
 python = "^3.10"
 nshconfig = "*"
-cached-path = { version = "*", optional = true }
+cached-path = "*"
 
 [tool.poetry.group.dev.dependencies]
 pyright = "*"
@@ -32,7 +32,11 @@ strictSetInference = true
 reportPrivateImportUsage = false
 
 [tool.ruff.lint]
+select = ["FA102", "FA100"]
 ignore = ["F722", "F821", "E731", "E741"]
 
+[tool.ruff.lint.isort]
+required-imports = ["from __future__ import annotations"]
+
 [tool.poetry.extras]
-extra = ["cached-path"]
+extra = []
