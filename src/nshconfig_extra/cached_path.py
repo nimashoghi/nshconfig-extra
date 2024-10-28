@@ -40,16 +40,44 @@ class CachedPath(C.Config):
     Whether to suppress the progress bar.
     """
 
+    is_local: bool = False
+    """
+    Whether the cached path is a local path. If set, this completely bypasses the caching mechanism,
+    and simply returns the path as-is.
+    """
+
+    @classmethod
+    def local(cls, path: str | Path, /):
+        return cls(uri=path, is_local=True)
+
     @override
     def __post_init__(self):
         super().__post_init__()
-        if not importlib.util.find_spec("cached_path"):
-            raise ImportError(
-                "The 'cached_path' library is required to use 'CachedPath'. "
-                "Please make sure you install nshconfig with all extras: `pip install nshconfig[extra]`."
-            )
+
+        if self.is_local:
+            if self.extract_archive:
+                raise ValueError(
+                    "The 'extract_archive' parameter is not supported for local paths."
+                )
+            if self.force_extract:
+                raise ValueError(
+                    "The 'force_extract' parameter is not supported for local paths."
+                )
+            if self.cache_dir:
+                raise ValueError(
+                    "The 'cache_dir' parameter is not supported for local paths."
+                )
+        else:
+            if not importlib.util.find_spec("cached_path"):
+                raise ImportError(
+                    "The 'cached_path' library is required to use 'CachedPath'. "
+                    "Please make sure you install nshconfig with all extras: `pip install nshconfig[extra]`."
+                )
 
     def resolve(self) -> Path:
+        if self.is_local:
+            return Path(self.uri)
+
         from cached_path import cached_path
 
         return cached_path(
