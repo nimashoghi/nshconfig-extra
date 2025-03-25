@@ -118,8 +118,9 @@ class RemoteSSHFileConfig(BaseFileConfig):
         username = parsed.username
         password = parsed.password
         remote_path = parsed.path
-        if not all([hostname, username, remote_path]):
-            raise ValueError("URI must contain hostname, username, and path")
+        if not remote_path:
+            raise ValueError("URI must contain a path")
+
         return cls(
             hostname=hostname,
             port=port,
