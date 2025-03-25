@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nshconfig-extra"
-version = "0.5.0"
+version = "0.6.0"
 description = ""
 authors = ["Nima Shoghi <nimashoghi@gmail.com>"]
 readme = "README.md"
@@ -12,6 +12,7 @@ homepage = "https://github.com/nimashoghi/nshconfig-extra"
 python = "^3.10"
 nshconfig = "*"
 cached-path = "*"
+paramiko = "*"
 
 [tool.poetry.group.dev.dependencies]
 pyright = "*"
