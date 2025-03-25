@@ -21,16 +21,7 @@ class RemoteSSHFileConfig(BaseFileConfig):
     remote_path: str
 
     @override
-    def __post_init__(self):
-        super().__post_init__()
-        if not self.hostname:
-            raise ValueError("Hostname must be provided.")
-        if not self.username:
-            raise ValueError("Username must be provided.")
-        if not self.remote_path:
-            raise ValueError("Remote path must be provided.")
-
-    def resolve(self) -> Path:
+    def resolve(self):
         """
         Downloads the remote file to a temporary file and returns its local Path.
         This method incurs the overhead of copying the file locally.
@@ -63,6 +54,7 @@ class RemoteSSHFileConfig(BaseFileConfig):
             ssh.close()
         return Path(tmp_file.name)
 
+    @override
     def open(self, mode: str = "rb"):
         """
         Opens the remote file directly over SSH without copying it locally.
