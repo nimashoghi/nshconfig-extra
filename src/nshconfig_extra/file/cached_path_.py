@@ -3,7 +3,6 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
-import nshconfig as C
 from cached_path import cached_path
 from typing_extensions import override
 

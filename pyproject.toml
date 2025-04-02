@@ -1,21 +1,21 @@
-[tool.poetry]
+[project]
 name = "nshconfig-extra"
-version = "0.6.2"
+version = "0.7.0"
 description = ""
-authors = ["Nima Shoghi <nimashoghi@gmail.com>"]
+authors = [{ name = "Nima Shoghi", email = "nimashoghi@gmail.com" }]
+requires-python = ">=3.10"
 readme = "README.md"
+dependencies = ["nshconfig", "cached-path"]
 
-[tool.poetry.urls]
+[project.optional-dependencies]
+ssh = ["paramiko"]
+extra = ["paramiko"]
+
+[project.urls]
 homepage = "https://github.com/nimashoghi/nshconfig-extra"
 
-[tool.poetry.dependencies]
-python = "^3.10"
-nshconfig = "*"
-cached-path = "*"
-paramiko = "*"
-
 [tool.poetry.group.dev.dependencies]
-pyright = "*"
+basedpyright = "*"
 ruff = "*"
 ipykernel = "*"
 ipywidgets = "*"
@@ -24,7 +24,7 @@ ipywidgets = "*"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.pyright]
+[tool.basedpyright]
 typeCheckingMode = "standard"
 deprecateTypingAliases = true
 strictListInference = true
@@ -38,6 +38,3 @@ ignore = ["F722", "F821", "E731", "E741"]
 
 [tool.ruff.lint.isort]
 required-imports = ["from __future__ import annotations"]
-
-[tool.poetry.extras]
-extra = []
