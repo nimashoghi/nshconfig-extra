@@ -1,6 +1,6 @@
 [project]
 name = "nshconfig-extra"
-version = "0.7.3"
+version = "0.8.0"
 description = ""
 authors = [{ name = "Nima Shoghi", email = "nimashoghi@gmail.com" }]
 requires-python = ">=3.10,<4.0"
@@ -9,7 +9,7 @@ dependencies = ["nshconfig", "cached-path"]
 
 [project.optional-dependencies]
 ssh = ["paramiko"]
-extra = []
+extra = ["paramiko"]
 
 [project.urls]
 homepage = "https://github.com/nimashoghi/nshconfig-extra"
