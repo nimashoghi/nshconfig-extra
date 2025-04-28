@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 
 import nshconfig as C
-from typing_extensions import assert_never
+from typing_extensions import TypeAliasType, assert_never
 
 
 class BaseFileConfig(C.Config, ABC):
@@ -24,7 +24,10 @@ class BaseFileConfig(C.Config, ABC):
         """
 
 
-def resolve_file_config(file: str | Path | BaseFileConfig):
+AnyFileConfig = TypeAliasType("AnyFileConfig", str | Path | BaseFileConfig)
+
+
+def resolve_file_config(file: AnyFileConfig) -> Path:
     match file:
         case str() | Path():
             return Path(file)
@@ -35,7 +38,7 @@ def resolve_file_config(file: str | Path | BaseFileConfig):
 
 
 def open_file_config(
-    file: str | Path | BaseFileConfig,
+    file: AnyFileConfig,
     mode: str = "rb",
 ) -> contextlib.AbstractContextManager[Any]:
     match file:
