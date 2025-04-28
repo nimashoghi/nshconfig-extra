@@ -4,6 +4,8 @@ from .file import BaseFileConfig as BaseFileConfig
 from .file import CachedPath as CachedPath
 from .file import CachedPathConfig as CachedPathConfig
 from .file import RemoteSSHFileConfig as RemoteSSHFileConfig
+from .file import open_file_config as open_file_config
+from .file import resolve_file_config as resolve_file_config
 
 try:
     from importlib.metadata import PackageNotFoundError, version

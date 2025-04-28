@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 import nshconfig as C
+from typing_extensions import assert_never
 
 
 class BaseFileConfig(C.Config, ABC):
@@ -21,3 +22,26 @@ class BaseFileConfig(C.Config, ABC):
         """
         Opens the file and returns a file handle wrapped in a context manager.
         """
+
+
+def resolve_file_config(file: str | Path | BaseFileConfig):
+    match file:
+        case str() | Path():
+            return Path(file)
+        case BaseFileConfig():
+            return file.resolve()
+        case _:
+            assert_never(file)
+
+
+def open_file_config(
+    file: str | Path | BaseFileConfig,
+    mode: str = "rb",
+) -> contextlib.AbstractContextManager[Any]:
+    match file:
+        case str() | Path():
+            return open(file, mode)
+        case BaseFileConfig():
+            return file.open(mode)
+        case _:
+            assert_never(file)
