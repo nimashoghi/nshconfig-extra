@@ -1,6 +1,6 @@
 # nshconfig-extra
 
-`nshconfig-extra` is a collection of additional configuration types for the [nshconfig](https://github.com/nimashoghi/nshconfig) library. It extends the functionality of `nshconfig` by providing support for some additional custom configuration types, such as `HFPath` for working with Hugging Face paths and URLs.
+`nshconfig-extra` is a collection of additional configuration types for the [nshconfig](https://github.com/nimashoghi/nshconfig) library. It extends the functionality of `nshconfig` by providing support for file handling across various storage systems (local, remote SSH, URLs, cloud storage) through a unified interface.
 
 ## Installation
 
@@ -10,7 +10,7 @@ To install `nshconfig-extra`, use the following command:
 pip install nshconfig-extra
 ```
 
-If you want to use the this library with optional dependencies, you can install the extra dependencies using the following command:
+If you want to use this library with optional dependencies (SSH support), you can install the extra dependencies using the following command:
 
 ```bash
 pip install nshconfig-extra[extra]
@@ -18,43 +18,80 @@ pip install nshconfig-extra[extra]
 
 ## Usage
 
-### HFPath
+### File Handling
 
-The `HFPath` configuration type allows you to define and work with Hugging Face paths and URLs seamlessly. It provides methods for parsing Hugging Face paths and URLs and downloading the corresponding files.
+The package provides a unified interface for working with files from various sources.
 
-#### Parsing Hugging Face Paths
+#### Base File Config
 
-To parse a Hugging Face path, use the `HFPath.from_hf_path()` method:
-
-```python
-from nshconfig_extra import HFPath
-
-path = HFPath.from_hf_path("user/repo@branch/path/to/file")
-```
-
-The path should be in the format `{user}/{repo}@{branch}/{path/to/file}`. If the branch is not specified, the default branch "main" will be used. If the file path is not specified, an empty string will be used.
-
-#### Parsing Hugging Face URLs
-
-To parse a Hugging Face URL, use the `HFPath.from_hf_url()` method:
+All file configurations inherit from `BaseFileConfig`, which provides a consistent interface:
 
 ```python
-from nshconfig_extra import HFPath
+from nshconfig_extra import BaseFileConfig, AnyFileConfig, resolve_file_config, open_file_config
 
-path = HFPath.from_hf_url("https://huggingface.co/user/repo/resolve/branch/path/to/file")
+# Type alias for any file reference
+# AnyFileConfig = str | Path | BaseFileConfig
+
+# Helper functions for working with any file type
+path = resolve_file_config("path/to/file.txt")  # Returns a Path object
+with open_file_config("path/to/file.txt", "rt") as f:
+    content = f.read()
 ```
 
-The URL should be a valid Hugging Face URL pointing to a specific file in a repository.
+#### CachedPathConfig
 
-#### Downloading Files
-
-Once you have an `HFPath` instance, you can download the corresponding file using the `download()` method:
+The `CachedPathConfig` class provides access to files from various sources with automatic caching:
 
 ```python
-local_path = path.download()
+from nshconfig_extra import CachedPathConfig
+
+# Access a file from Hugging Face Hub
+config = CachedPathConfig(uri="https://huggingface.co/user/repo/resolve/main/file.txt")
+local_path = config.resolve()  # Downloads if needed, returns local cached path
+with config.open("rt") as f:   # Opens the file directly
+    content = f.read()
+
+# Access a file from S3
+s3_config = CachedPathConfig(uri="s3://bucket/path/to/file.txt")
+s3_path = s3_config.resolve()
+
+# Local file with caching
+local_config = CachedPathConfig(uri="/path/to/file.txt")
 ```
 
-The `download()` method will download the file if it doesn't exist locally and return the local path to the downloaded file.
+Supported URI types:
+- Local file paths
+- HTTP/HTTPS URLs
+- S3 bucket paths (s3://...)
+- GCS bucket paths (gs://...)
+- Hugging Face Hub paths
+
+#### SSH File Access
+
+For accessing files on remote servers via SSH:
+
+```python
+from nshconfig_extra import RemoteSSHFileConfig
+
+# Using SSH URI
+ssh_config = RemoteSSHFileConfig.from_uri("ssh://user:pass@hostname:22/path/to/file.txt")
+
+# Using SSH config file (~/.ssh/config)
+ssh_config = RemoteSSHFileConfig.from_ssh_config("host_alias", "/path/to/remote/file.txt")
+
+# Direct connection
+ssh_config = RemoteSSHFileConfig.from_direct_connection(
+    hostname="example.com",
+    remote_path="/path/to/file.txt",
+    username="user",
+    password="pass"
+)
+
+# Accessing the file
+local_path = ssh_config.resolve()  # Downloads to temporary location
+with ssh_config.open("rt") as f:    # Opens directly over SSH
+    content = f.read()
+```
 
 ## Contributing
 
@@ -66,4 +103,4 @@ Contributions to `nshconfig-extra` are welcome! If you encounter any issues or h
 
 ## Acknowledgements
 
-`nshconfig-extra` (and `nshconfig`) are heavily dependent on the [Pydantic](https://pydantic-docs.helpmanual.io/) library for defining and validating configuration types.
+`nshconfig-extra` (and `nshconfig`) are heavily dependent on the [Pydantic](https://pydantic-docs.helpmanual.io/) library for defining and validating configuration types. The file caching functionality leverages the [cached-path](https://github.com/allenai/cached_path) library.
