@@ -1,6 +1,6 @@
 [project]
 name = "nshconfig-extra"
-version = "0.9.3"
+version = "0.10.0"
 description = ""
 authors = [{ name = "Nima Shoghi", email = "nimashoghi@gmail.com" }]
 requires-python = ">=3.9,<4.0"
