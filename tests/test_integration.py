@@ -276,7 +276,7 @@ class TestIntegration:
     def test_config_type_validation(self):
         """Test that invalid config types raise appropriate errors."""
         # This should raise an AssertionError due to assert_never
-        invalid_config = 123  # type: ignore
+        invalid_config = 123
 
         # The match statement in utility functions should handle this with assert_never
         with pytest.raises(AssertionError, match="Expected code to be unreachable"):

@@ -3,11 +3,10 @@
 from __future__ import annotations
 
 import contextlib
-import tempfile
 from pathlib import Path
-from unittest.mock import Mock
 
 import pytest
+from typing_extensions import override
 
 from nshconfig_extra.file import (
     AnyFileConfig,
@@ -22,6 +21,7 @@ class MockFileConfig(BaseFileConfig):
 
     path: Path
 
+    @override
     def resolve(self) -> Path:
         return self.path
 
@@ -42,7 +42,7 @@ class TestBaseFileConfig:
     def test_cannot_instantiate_directly(self):
         """Test that BaseFileConfig cannot be instantiated directly."""
         with pytest.raises(TypeError, match="Can't instantiate abstract class"):
-            BaseFileConfig()
+            BaseFileConfig()  # pyright: ignore[reportAbstractUsage]
 
 
 class TestResolveFileConfig:
